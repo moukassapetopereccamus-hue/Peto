@@ -1,0 +1,1038 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AXIOME TITANIUM — Bac Congo Série D</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@300;400;500;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #050508;
+    --white: #F2F0EB;
+    --gold: #D4A017;
+    --gold-light: #F5C842;
+    --math-color: #4FC3F7;
+    --phys-color: #FF6B6B;
+    --chem-color: #69F0AE;
+    --svt-color: #CE93D8;
+    --danger: #FF3B3B;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'Space Grotesk', sans-serif;
+    overflow-x: hidden;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    padding: 40px 20px;
+    text-align: center;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: 
+      radial-gradient(ellipse 80% 60% at 50% 0%, rgba(212,160,23,0.15) 0%, transparent 70%),
+      radial-gradient(ellipse 60% 40% at 20% 80%, rgba(79,195,247,0.08) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 40% at 80% 80%, rgba(105,240,174,0.08) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .grid-bg {
+    position: absolute;
+    inset: 0;
+    background-image: 
+      linear-gradient(rgba(212,160,23,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(212,160,23,0.04) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+  }
+
+  .badge {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: var(--gold);
+    border: 1px solid rgba(212,160,23,0.4);
+    padding: 6px 16px;
+    margin-bottom: 32px;
+    animation: fadeDown 0.6s ease both;
+  }
+
+  .hero-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(64px, 14vw, 160px);
+    line-height: 0.9;
+    letter-spacing: 2px;
+    color: var(--white);
+    position: relative;
+    animation: fadeDown 0.7s ease 0.1s both;
+  }
+
+  .hero-title span {
+    color: var(--gold);
+    display: block;
+  }
+
+  .hero-sub {
+    font-size: clamp(14px, 2.5vw, 18px);
+    color: rgba(242,240,235,0.5);
+    letter-spacing: 1px;
+    margin-top: 20px;
+    animation: fadeDown 0.7s ease 0.2s both;
+  }
+
+  /* ── COUNTDOWN ── */
+  .countdown-wrapper {
+    margin-top: 50px;
+    animation: fadeDown 0.7s ease 0.3s both;
+  }
+
+  .countdown-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 4px;
+    color: rgba(212,160,23,0.6);
+    margin-bottom: 12px;
+  }
+
+  .countdown-grid {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .countdown-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    padding: 16px 24px;
+    text-align: center;
+    min-width: 90px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .countdown-card.urgent {
+    border-color: rgba(255,59,59,0.4);
+    background: rgba(255,59,59,0.05);
+  }
+
+  .countdown-card.urgent .count-label {
+    color: var(--danger);
+  }
+
+  .countdown-card.calm {
+    border-color: rgba(212,160,23,0.3);
+  }
+
+  .countdown-card.calm .count-label {
+    color: var(--gold);
+  }
+
+  .count-number {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 52px;
+    line-height: 1;
+    color: var(--white);
+  }
+
+  .count-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    margin-top: 4px;
+  }
+
+  .count-event {
+    font-size: 10px;
+    color: rgba(242,240,235,0.4);
+    margin-top: 4px;
+    font-weight: 500;
+  }
+
+  .urgency-bar {
+    margin-top: 16px;
+    height: 2px;
+    background: rgba(255,255,255,0.06);
+    position: relative;
+    overflow: hidden;
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .urgency-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--danger), var(--gold));
+    animation: urgencyPulse 2s ease-in-out infinite;
+  }
+
+  @keyframes urgencyPulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  /* ── SECTION TITLE ── */
+  .section {
+    padding: 80px 20px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .section-header {
+    text-align: center;
+    margin-bottom: 60px;
+  }
+
+  .section-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 4px;
+    color: rgba(242,240,235,0.3);
+    display: block;
+    margin-bottom: 12px;
+  }
+
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(40px, 7vw, 72px);
+    line-height: 1;
+  }
+
+  /* ── GEM CARDS ── */
+  .gems-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2px;
+  }
+
+  .gem-card {
+    position: relative;
+    padding: 40px 32px;
+    background: rgba(255,255,255,0.025);
+    border: 1px solid rgba(255,255,255,0.06);
+    overflow: hidden;
+    cursor: default;
+    transition: transform 0.3s ease, border-color 0.3s ease;
+  }
+
+  .gem-card:hover {
+    transform: translateY(-4px);
+  }
+
+  .gem-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+  }
+
+  .gem-card.math::before { background: var(--math-color); }
+  .gem-card.phys::before { background: var(--phys-color); }
+  .gem-card.chem::before { background: var(--chem-color); }
+  .gem-card.svt::before  { background: var(--svt-color); }
+
+  .gem-card:hover.math { border-color: rgba(79,195,247,0.3); }
+  .gem-card:hover.phys { border-color: rgba(255,107,107,0.3); }
+  .gem-card:hover.chem { border-color: rgba(105,240,174,0.3); }
+  .gem-card:hover.svt  { border-color: rgba(206,147,216,0.3); }
+
+  .gem-glow {
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 180px; height: 180px;
+    border-radius: 50%;
+    opacity: 0.06;
+    transition: opacity 0.3s;
+  }
+
+  .gem-card:hover .gem-glow { opacity: 0.12; }
+
+  .gem-card.math .gem-glow { background: var(--math-color); }
+  .gem-card.phys .gem-glow { background: var(--phys-color); }
+  .gem-card.chem .gem-glow { background: var(--chem-color); }
+  .gem-card.svt  .gem-glow { background: var(--svt-color); }
+
+  .gem-icon {
+    font-size: 36px;
+    margin-bottom: 20px;
+    display: block;
+  }
+
+  .gem-version {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    margin-bottom: 8px;
+    opacity: 0.4;
+  }
+
+  .gem-card.math .gem-version { color: var(--math-color); }
+  .gem-card.phys .gem-version { color: var(--phys-color); }
+  .gem-card.chem .gem-version { color: var(--chem-color); }
+  .gem-card.svt  .gem-version { color: var(--svt-color); }
+
+  .gem-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 42px;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+
+  .gem-tagline {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin-bottom: 20px;
+    opacity: 0.5;
+    text-transform: uppercase;
+  }
+
+  .gem-hook {
+    font-size: 15px;
+    line-height: 1.6;
+    color: rgba(242,240,235,0.75);
+    margin-bottom: 28px;
+  }
+
+  .gem-hook strong {
+    color: var(--white);
+    font-weight: 700;
+  }
+
+  .gem-stats {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 28px;
+  }
+
+  .stat-pill {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1px;
+    padding: 5px 10px;
+    border-radius: 2px;
+    font-weight: 700;
+  }
+
+  .gem-card.math .stat-pill { background: rgba(79,195,247,0.1); color: var(--math-color); }
+  .gem-card.phys .stat-pill { background: rgba(255,107,107,0.1); color: var(--phys-color); }
+  .gem-card.chem .stat-pill { background: rgba(105,240,174,0.1); color: var(--chem-color); }
+  .gem-card.svt  .stat-pill { background: rgba(206,147,216,0.1); color: var(--svt-color); }
+
+  .gem-reflexes {
+    border-top: 1px solid rgba(255,255,255,0.06);
+    padding-top: 20px;
+  }
+
+  .reflexes-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 3px;
+    opacity: 0.3;
+    margin-bottom: 12px;
+  }
+
+  .reflex-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 10px;
+    font-size: 13px;
+    color: rgba(242,240,235,0.65);
+    line-height: 1.4;
+  }
+
+  .reflex-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 5px;
+  }
+
+  .gem-card.math .reflex-dot { background: var(--math-color); }
+  .gem-card.phys .reflex-dot { background: var(--phys-color); }
+  .gem-card.chem .reflex-dot { background: var(--chem-color); }
+  .gem-card.svt  .reflex-dot { background: var(--svt-color); }
+
+  /* ── ADVANTAGES ── */
+  .adv-section {
+    padding: 80px 20px;
+    background: rgba(255,255,255,0.015);
+    border-top: 1px solid rgba(255,255,255,0.05);
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+
+  .adv-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .adv-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 2px;
+    margin-top: 50px;
+  }
+
+  .adv-card {
+    padding: 32px;
+    background: var(--black);
+    border: 1px solid rgba(255,255,255,0.05);
+    position: relative;
+    transition: border-color 0.3s;
+  }
+
+  .adv-card:hover {
+    border-color: rgba(212,160,23,0.3);
+  }
+
+  .adv-number {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 80px;
+    line-height: 1;
+    color: rgba(212,160,23,0.08);
+    position: absolute;
+    top: 16px; right: 20px;
+  }
+
+  .adv-icon {
+    font-size: 28px;
+    margin-bottom: 16px;
+    display: block;
+  }
+
+  .adv-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 26px;
+    color: var(--gold-light);
+    margin-bottom: 10px;
+    line-height: 1.1;
+  }
+
+  .adv-text {
+    font-size: 13px;
+    line-height: 1.65;
+    color: rgba(242,240,235,0.55);
+  }
+
+  .adv-text strong {
+    color: rgba(242,240,235,0.9);
+    font-weight: 600;
+  }
+
+  /* ── CTA ── */
+  .cta-section {
+    padding: 100px 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cta-section::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 70% 60% at 50% 50%, rgba(212,160,23,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .cta-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(40px, 8vw, 88px);
+    line-height: 1;
+    margin-bottom: 20px;
+  }
+
+  .cta-title em {
+    font-style: normal;
+    color: var(--gold);
+  }
+
+  .cta-sub {
+    font-size: 15px;
+    color: rgba(242,240,235,0.45);
+    max-width: 500px;
+    margin: 0 auto 40px;
+    line-height: 1.6;
+  }
+
+  .cta-pills {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .cta-pill {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    padding: 10px 20px;
+    border: 1px solid rgba(212,160,23,0.4);
+    color: var(--gold);
+    text-transform: uppercase;
+  }
+
+  .cta-pill.filled {
+    background: var(--gold);
+    color: var(--black);
+    font-weight: 700;
+    border-color: var(--gold);
+    animation: goldPulse 2.5s ease-in-out infinite;
+  }
+
+  /* ── WHATSAPP BUTTON ── */
+  .wa-wrapper {
+    margin-top: 48px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .wa-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    background: #25D366;
+    color: #000;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 26px;
+    letter-spacing: 2px;
+    padding: 18px 40px;
+    text-decoration: none;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.3s ease;
+    animation: waPulse 2s ease-in-out infinite;
+  }
+
+  .wa-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(120deg, transparent 30%, rgba(255,255,255,0.25) 50%, transparent 70%);
+    transform: translateX(-100%);
+    animation: waShine 2.5s ease-in-out infinite;
+  }
+
+  .wa-btn:hover {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 12px 40px rgba(37,211,102,0.45);
+  }
+
+  .wa-btn:active {
+    transform: translateY(0) scale(0.99);
+  }
+
+  .wa-icon {
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+  }
+
+  .wa-sub {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: rgba(242,240,235,0.3);
+    text-align: center;
+  }
+
+  .wa-sub span {
+    color: #25D366;
+    font-weight: 700;
+  }
+
+  @keyframes waPulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(37,211,102,0.0); }
+    50%       { box-shadow: 0 0 28px 6px rgba(37,211,102,0.3); }
+  }
+
+  @keyframes waShine {
+    0%   { transform: translateX(-100%); }
+    60%, 100% { transform: translateX(100%); }
+  }
+
+  @keyframes goldPulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(212,160,23,0); }
+    50% { box-shadow: 0 0 24px 4px rgba(212,160,23,0.25); }
+  }
+
+  /* ── WHATSAPP BUTTON ── */
+  .wa-wrapper {
+    margin-top: 48px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .wa-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 18px;
+    background: linear-gradient(135deg, #128C7E 0%, #25D366 100%);
+    color: #fff;
+    text-decoration: none;
+    padding: 20px 32px;
+    border-radius: 4px;
+    max-width: 560px;
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    animation: waPulse 2.8s ease-in-out infinite;
+  }
+
+  .wa-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 16px 48px rgba(37,211,102,0.35);
+    animation: none;
+  }
+
+  .wa-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.08) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  @keyframes waPulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(37,211,102,0.0); }
+    50%       { box-shadow: 0 0 32px 6px rgba(37,211,102,0.28); }
+  }
+
+  .wa-icon { flex-shrink: 0; display: flex; align-items: center; }
+
+  .wa-text { flex: 1; text-align: left; }
+
+  .wa-label {
+    display: block;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 1.5px;
+    line-height: 1.1;
+    color: #fff;
+  }
+
+  .wa-sub {
+    display: block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1px;
+    color: rgba(255,255,255,0.7);
+    margin-top: 4px;
+  }
+
+  .wa-arrow {
+    font-size: 22px;
+    color: rgba(255,255,255,0.8);
+    flex-shrink: 0;
+    transition: transform 0.2s ease;
+  }
+
+  .wa-btn:hover .wa-arrow { transform: translateX(5px); }
+
+  .wa-note {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: rgba(242,240,235,0.25);
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ── MOBILE ── */
+  @media (max-width: 600px) {
+    .gems-grid { grid-template-columns: 1fr; gap: 2px; }
+    .adv-grid  { grid-template-columns: 1fr; }
+    .gem-card  { padding: 28px 22px; }
+    .adv-card  { padding: 24px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══ HERO ══ -->
+<section class="hero">
+  <div class="grid-bg"></div>
+
+  <div class="badge">SÉRIE D · CONGO · MENTION TRÈS BIEN</div>
+
+  <h1 class="hero-title">
+    AXIOME
+    <span>TITANIUM</span>
+  </h1>
+  <p class="hero-sub">Le seul système conçu pour 16/20. Pas pour passer. Pour dominer.</p>
+
+  <div class="countdown-wrapper">
+    <p class="countdown-label">COMPTE À REBOURS CRITIQUE</p>
+    <div class="countdown-grid">
+      <div class="countdown-card urgent">
+        <div class="count-number" id="days-blanc">—</div>
+        <div class="count-label">JOURS</div>
+        <div class="count-event">BAC BLANC</div>
+      </div>
+      <div class="countdown-card calm">
+        <div class="count-number" id="days-rouge">—</div>
+        <div class="count-label">JOURS</div>
+        <div class="count-event">BAC ROUGE · 2 JUIN</div>
+      </div>
+    </div>
+    <div class="urgency-bar">
+      <div class="urgency-fill" id="urgency-fill" style="width:90%"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ GEM CARDS ══ -->
+<section class="section">
+  <div class="section-header reveal">
+    <span class="section-label">LES 4 ARMES</span>
+    <h2 class="section-title">CHOISIR SA DISCIPLINE.<br>DOMINER SON SUJET.</h2>
+  </div>
+
+  <div class="gems-grid">
+
+    <!-- MATHS -->
+    <div class="gem-card math reveal">
+      <div class="gem-glow"></div>
+      <span class="gem-icon">🏛️</span>
+      <div class="gem-version">V13.0 · MATHS</div>
+      <div class="gem-name">AXIOME<br>MATHS</div>
+      <div class="gem-tagline">Sur 20 pts · Coefficient décisif</div>
+      <p class="gem-hook">
+        Tu peux pas te permettre de perdre des points sur les <strong>formules que tu connais</strong>. 
+        Le gem te force à les poser avant de toucher un chiffre. 
+        Résultat : <strong>zéro erreur de méthode</strong>.
+      </p>
+      <div class="gem-stats">
+        <span class="stat-pill">VERROUILLAGE FORMULE</span>
+        <span class="stat-pill">PROGRESSION N→N+2</span>
+        <span class="stat-pill">SOCRATIQUE</span>
+      </div>
+      <div class="gem-reflexes">
+        <div class="reflexes-label">RÉFLEXES BLINDÉS</div>
+        <div class="reflex-item">
+          <div class="reflex-dot"></div>
+          Logarithmes & formes indéterminées
+        </div>
+        <div class="reflex-item">
+          <div class="reflex-dot"></div>
+          Suites, intégration, équations différentielles
+        </div>
+        <div class="reflex-item">
+          <div class="reflex-dot"></div>
+          Probabilités, statistiques, géométrie
+        </div>
+        <div class="reflex-item">
+          <div class="reflex-dot"></div>
+          Nombres complexes — piège classique Bac D
+        </div>
+      </div>
+    </div>
+
+    <!-- PHYSIQUE -->
+    <div class="gem-card phys reveal">
+      <div class="gem-glow"></div>
+      <span class="gem-icon">⚡</span>
+      <div class="gem-version">V2.0 · PHYSIQUE</div>
+      <div class="gem-name">AXIOME<br>PHYSIQUE</div>
+      <div class="gem-tagline">12 pts sur 20 · Schéma obligatoire</div>
+      <p class="gem-hook">
+        En physique les points se perdent <strong>avant les calculs</strong> — 
+        schéma absent, référentiel oublié, unités fausses. 
+        Le gem bloque chaque étape <strong>jusqu'à ce que ce soit juste</strong>.
+      </p>
+      <div class="gem-stats">
+        <span class="stat-pill">SCHÉMA D'ABORD</span>
+        <span class="stat-pill">CHAÎNE CAUSALE</span>
+        <span class="stat-pill">UNITÉS BLINDÉES</span>
+      </div>
+      <div class="gem-reflexes">
+        <div class="reflexes-label">RÉFLEXES BLINDÉS</div>
+        <div class="reflex-item">
+          <div class="reflex-dot"></div>
+          Mécanique — bilan des forces, plan incliné
+        </div>
+        <div class="reflex-item">
+          <div class="reflex-dot"></div>
+          Ondes — équation horaire, déphasage
+        </div>
+        <div class="reflex-item">
+          <div class="reflex-dot"></div>
+          Électricité AC — circuit RLC, impédance
+        </div>
+        <div class="reflex-item">
+          <div class="reflex-dot"></div>
+          Optique — effet photoélectrique, lentilles
+        </div>
+      </div>
+    </div>
+
+    <!-- CHIMIE -->
+    <div class="gem-card chem reveal">
+      <div class="gem-glow"></div>
+      <span class="gem-icon">⚗️</span>
+      <div class="gem-version">V1.0 · CHIMIE</div>
+      <div class="gem-name">AXIOME<br>CHIMIE</div>
+      <div class="gem-tagline">8 pts · Zéro erreur d'équation</div>
+      <p class="gem-hook">
+        Une équation pas équilibrée = 0 même si tout le reste est juste.
+        Le gem vérifie <strong>atomes, charges, sens, unités</strong> — 
+        dans l'ordre, à chaque fois. <strong>Pas de passe-droit.</strong>
+      </p>
+      <div class="gem-stats">
+        <span class="stat-pill">ÉQUATIONS RIGOUREUSES</span>
+        <span class="stat-pill">CONVERSIONS CONTRÔLÉES</span>
+        <span class="stat-pill">5 DOMAINES</span>
+      </div>
+      <div class="gem-reflexes">
+        <div class="reflexes-label">RÉFLEXES BLINDÉS</div>
+        <div class="reflex-item">
+          <div class="reflex-dot"></div>
+          Spectre atomique — niveaux d'énergie, transitions
+        </div>
+        <div class="reflex-item">
+          <div class="reflex-dot"></div>
+          Cinétique — ordre 1 & 2, temps de demi-réaction
+        </div>
+        <div class="reflex-item">
+          <div class="reflex-dot"></div>
+          Acide-base — pH, pKa, dosage, espèces en solution
+        </div>
+        <div class="reflex-item">
+          <div class="reflex-dot"></div>
+          Oxydoréduction — demi-équations, milieu acide
+        </div>
+      </div>
+    </div>
+
+    <!-- SVT -->
+    <div class="gem-card svt reveal">
+      <div class="gem-glow"></div>
+      <span class="gem-icon">🧬</span>
+      <div class="gem-version">V1.0 · SVT</div>
+      <div class="gem-name">AXIOME<br>SVT</div>
+      <div class="gem-tagline">Coeff 4-5 · 6 pts à aller chercher</div>
+      <p class="gem-hook">
+        La Partie A (6 pts) c'est de l'argent gratuit si tu te prépares.
+        La Partie C (6 pts) c'est là que se joue la mention TB.
+        Le gem t'entraîne sur <strong>les deux</strong>.
+      </p>
+      <div class="gem-stats">
+        <span class="stat-pill">PARTIES A→C</span>
+        <span class="stat-pill">DOCUMENT D'ABORD</span>
+        <span class="stat-pill">VOCAB EXACT</span>
+      </div>
+      <div class="gem-reflexes">
+        <div class="reflexes-label">RÉFLEXES BLINDÉS</div>
+        <div class="reflex-item">
+          <div class="reflex-dot"></div>
+          Génétique — arbre généalogique, groupes sanguins
+        </div>
+        <div class="reflex-item">
+          <div class="reflex-dot"></div>
+          Hormones — cycle, rétrocontrôle, parabiose
+        </div>
+        <div class="reflex-item">
+          <div class="reflex-dot"></div>
+          Système nerveux — courbe d'excitabilité, synapse
+        </div>
+        <div class="reflex-item">
+          <div class="reflex-dot"></div>
+          Géologie — tectonique, subduction, dorsales
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══ AVANTAGES ══ -->
+<div class="adv-section">
+  <div class="adv-inner">
+    <div class="section-header reveal">
+      <span class="section-label">POURQUOI C'EST DIFFÉRENT</span>
+      <h2 class="section-title" style="color:var(--gold-light)">FAIT POUR<br>LA MENTION. POINT.</h2>
+    </div>
+
+    <div class="adv-grid">
+
+      <div class="adv-card reveal">
+        <div class="adv-number">01</div>
+        <span class="adv-icon">🎯</span>
+        <div class="adv-title">CALIBRÉ 16/20</div>
+        <p class="adv-text">Pas pour comprendre vaguement. Pour <strong>avoir 16/20 au Bac Congo Série D</strong>. Chaque question, chaque alerte, chaque exercice est construit autour de cet objectif précis.</p>
+      </div>
+
+      <div class="adv-card reveal">
+        <div class="adv-number">02</div>
+        <span class="adv-icon">📚</span>
+        <div class="adv-title">10 ANS D'ANNALES INTÉGRÉES</div>
+        <p class="adv-text">Le système sait <strong>quels pièges tombent chaque année</strong>, combien de points ils valent, et comment les examinateurs les formulent. Aucun prof particulier n'a cette précision.</p>
+      </div>
+
+      <div class="adv-card reveal">
+        <div class="adv-number">03</div>
+        <span class="adv-icon">🧠</span>
+        <div class="adv-title">TU RECONSTRUIS. TU N'ÉCOUTES PAS.</div>
+        <p class="adv-text">Axiome ne donne jamais la réponse. Tu <strong>reconstruis le raisonnement toi-même</strong>. C'est ça qui reste en mémoire le jour du Bac — pas la correction que tu as lue.</p>
+      </div>
+
+      <div class="adv-card reveal">
+        <div class="adv-number">04</div>
+        <span class="adv-icon">🎮</span>
+        <div class="adv-title">TON UNIVERS. TES RÈGLES.</div>
+        <p class="adv-text">Football, Gaming, Musique — le système explique chaque concept <strong>dans ta langue</strong>. Newton 2 via une frappe de balle. Le rétrocontrôle via un mécanisme anti-lag. <strong>Ça reste.</strong></p>
+      </div>
+
+      <div class="adv-card reveal">
+        <div class="adv-number">05</div>
+        <span class="adv-icon">📈</span>
+        <div class="adv-title">PROGRESSION FORCÉE</div>
+        <p class="adv-text">Le système monte automatiquement au niveau N+1 quand tu réussis. <strong>Pas de zone de confort.</strong> Mais il descend au N-1 sans jugement si tu bloques. Intelligent dans les deux sens.</p>
+      </div>
+
+      <div class="adv-card reveal">
+        <div class="adv-number">06</div>
+        <span class="adv-icon">⏱️</span>
+        <div class="adv-title">30 MIN/JOUR · RÉSULTATS RÉELS</div>
+        <p class="adv-text">Un exercice par jour. Format Bac réel. En 60 jours tu auras traité <strong>5 à 6 années d'annales de façon active</strong> — pas en les lisant. En les résolvant. C'est la différence.</p>
+      </div>
+
+      <div class="adv-card reveal">
+        <div class="adv-number">07</div>
+        <span class="adv-icon">💾</span>
+        <div class="adv-title">MÉMOIRE ENTRE LES SESSIONS</div>
+        <p class="adv-text">Chaque session mise à jour : notions maîtrisées, lacunes identifiées, points sécurisés. La prochaine session <strong>repart exactement là où tu t'es arrêté</strong>. Rien ne se perd.</p>
+      </div>
+
+      <div class="adv-card reveal">
+        <div class="adv-number">08</div>
+        <span class="adv-icon">🌙</span>
+        <div class="adv-title">DISPONIBLE 24H/24. SANS JUGEMENT.</div>
+        <p class="adv-text">Minuit avant un devoir. Dimanche matin. En déplacement. <strong>Toujours là.</strong> Tu rates 3 fois la même erreur — pas de commentaire négatif. Le système descend d'un niveau et recommence.</p>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ══ CTA ══ -->
+<section class="cta-section">
+  <h2 class="cta-title reveal">
+    LA MARGE<br>EST <em>COURTE.</em><br>L'OUTIL EST LÀ.
+  </h2>
+  <p class="cta-sub reveal">
+    Bac Blanc la semaine prochaine. Bac Rouge le 2 juin.<br>
+    Chaque session compte. Chaque réflexe blindé maintenant<br>
+    est un point sécurisé le jour J.
+  </p>
+  <div class="cta-pills reveal">
+    <span class="cta-pill">🏛️ Maths V13.0</span>
+    <span class="cta-pill">⚡ Physique V2.0</span>
+    <span class="cta-pill filled">⚗️ Chimie V1.0</span>
+    <span class="cta-pill">🧬 SVT V1.0</span>
+  </div>
+
+  <div class="wa-wrapper reveal">
+    <a
+      class="wa-btn"
+      href="https://wa.me/242053142728?text=Salut%20KORTEX%20!%20Je%20veux%20activer%20le%20mode%20Coach%20de%20Guerre%20avec%20Axiome%20Titanium.%20Aide-moi%20%C3%A0%20s%C3%A9curiser%20chaque%20point%2C%20transforme%20mes%20faiblesses%20en%20r%C3%A9flexes%20de%20survie%20et%20guide-moi%20pour%20viser%20la%20mention%2C%20pas%20juste%20la%20moyenne%20!"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      <svg width="30" height="30" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0">
+        <path d="M16 3C9.373 3 4 8.373 4 15c0 2.385.668 4.61 1.832 6.51L4 29l7.697-1.81A12.94 12.94 0 0 0 16 28c6.627 0 12-5.373 12-12S22.627 3 16 3Z" fill="rgba(0,0,0,0.2)"/>
+        <path d="M16 4.5C10.2 4.5 5.5 9.2 5.5 15c0 2.2.62 4.26 1.69 6.01L5.5 27.5l6.65-1.66A11.45 11.45 0 0 0 16 26.5c5.8 0 10.5-4.7 10.5-10.5S21.8 4.5 16 4.5Z" fill="white"/>
+        <path d="M21.844 18.846c-.308-.154-1.818-.896-2.099-.998-.281-.102-.486-.154-.69.154-.205.308-.793.998-.972 1.203-.179.205-.358.231-.666.077-.308-.154-1.3-.479-2.476-1.528-.915-.817-1.533-1.825-1.712-2.133-.179-.308-.019-.474.135-.628.138-.138.308-.359.462-.538.154-.179.205-.308.308-.513.103-.205.051-.384-.026-.538-.077-.154-.69-1.664-.946-2.279-.249-.598-.502-.517-.69-.527l-.588-.01c-.205 0-.538.077-.82.384-.282.308-1.075 1.05-1.075 2.56 0 1.51 1.101 2.97 1.255 3.175.154.205 2.168 3.31 5.252 4.638.734.317 1.307.506 1.754.648.737.235 1.408.202 1.939.122.591-.088 1.818-.743 2.074-1.46.256-.718.256-1.333.179-1.462-.077-.128-.281-.205-.589-.359Z" fill="#25D366"/>
+      </svg>
+      ACHETEZ MAINTENANT
+    </a>
+    <p class="wa-sub">
+      Répond directement sur <span>WhatsApp</span> &nbsp;·&nbsp; KORTEX t'attend
+    </p>
+  </div>
+
+</section>
+
+<script>
+  // ── COUNTDOWN ──
+  function getDaysUntil(dateStr) {
+    const target = new Date(dateStr);
+    const now = new Date();
+    const diff = Math.ceil((target - now) / (1000 * 60 * 60 * 24));
+    return Math.max(0, diff);
+  }
+
+  function updateCountdowns() {
+    // Bac blanc: next week from May 2, 2026
+    const bacBlancDate = '2026-05-09';
+    const bacRougeDate = '2026-06-02';
+
+    const daysB = getDaysUntil(bacBlancDate);
+    const daysR = getDaysUntil(bacRougeDate);
+
+    document.getElementById('days-blanc').textContent = daysB;
+    document.getElementById('days-rouge').textContent = daysR;
+
+    // Urgency bar: how much time has passed (0% = 60 days before rouge, 100% = rouge day)
+    const totalDays = 60;
+    const elapsed = totalDays - daysR;
+    const pct = Math.min(100, Math.max(5, (elapsed / totalDays) * 100));
+    document.getElementById('urgency-fill').style.width = pct + '%';
+  }
+
+  updateCountdowns();
+
+  // ── SCROLL REVEAL ──
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 80);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
